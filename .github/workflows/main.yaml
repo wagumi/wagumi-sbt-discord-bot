@@ -17,7 +17,7 @@ jobs:
       uses: burnett01/rsync-deployments@5.2
       with:
         switches: -avzr --delete
-        path: src/
+        path: ./
         remote_path: /home/wagumi/apps/wagumi-sbt
         remote_host: wagumi-prod-jpe-001.japaneast.cloudapp.azure.com
         remote_user: wagumi
