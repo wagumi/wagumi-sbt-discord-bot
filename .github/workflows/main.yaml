@@ -1,0 +1,25 @@
+name: DEPLOY
+on:
+  push:
+    branches:
+    - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: create .env
+      run: |
+        echo "DISCORD_TOKEN=${{ secrets.DISCORD_TOKEN }}" >> .env
+        echo "NOTION_API_TOKEN=${{ secrets.NOTION_API_TOKEN }}" >> .env
+    - name: rsync deployments
+      uses: burnett01/rsync-deployments@5.2
+      with:
+        switches: -avzr --delete
+        path: src/
+        remote_path: /home/wagumi/apps/wagumi-sbt
+        remote_host: wagumi-prod-jpe-001.japaneast.cloudapp.azure.com
+        remote_user: wagumi
+        remote_port: 57822
+        remote_key: ${{ secrets.SSH_PRIVATE_KEY }}
