@@ -21,6 +21,10 @@ const server = app.listen(8080, function() {
 	console.log(`Node.js is listening to PORT:${server.address().port}`);
 });
 
+app.get("/ping", (req, res) => {
+	res.send("pong");
+});
+
 app.get("/list", function(req, res, next) {
 	const list = require("./requests");
 	const result = {};
@@ -169,7 +173,7 @@ const getMember = async (userid) => {
 		const result = await rest.get(
 			Routes.guildMember(settings.GUILD_ID, userid),
 		);
-	
+
 		let icon;
 		if (result.avatar) {
 			icon = `https://cdn.discordapp.com/guilds/${settings.GUILD_ID}/users/${result
