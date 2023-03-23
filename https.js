@@ -64,7 +64,7 @@ app.get("/image", async (req, res, next) => {
 			}
 
 
-			const baseURI = "https://wagumi-sbt.ukishima.repl.co/base"
+			const baseURI = "https://apps.wagumi.xyz/sbt/base"
 			switch (image) {
 				case "YumeCawaii":
 					baseImage = `${baseURI}/wagumi_sbt_base_yumecawaii.png`;
