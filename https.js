@@ -107,7 +107,7 @@ app.post('/minted/', async (req, res) => {
 
 const addMinter = async (data) => {
 	try {
-		if (data.webhookId === "wh_30q0qgq7pqd5azfq") {
+		if (data.webhookId === "wh_bhpiswlt06zoazc3") {
 			const address = data.event.activity[0].fromAddress.toLowerCase();
 			const filePath = "./requests.json";
 			let requests = {};
