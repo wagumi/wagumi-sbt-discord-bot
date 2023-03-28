@@ -21,7 +21,7 @@ jobs:
       - name: rsync deployments
         uses: burnett01/rsync-deployments@5.2
         with:
-          switches: -avzr --delete --exclude=".git"
+          switches: -avzr --delete --exclude-from="rsync-exclude-list.txt"
           path: ./
           remote_path: /home/wagumi/apps/wagumi-sbt
           remote_host: wagumi-prod-jpe-001.japaneast.cloudapp.azure.com
