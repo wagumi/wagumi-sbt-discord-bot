@@ -160,10 +160,7 @@ client.on("interactionCreate", async (interaction) => {
 		}
 
 		const result = await execRegist(interaction.user.id, interaction.member.nickname ?? interaction.user.username, address);
-		await interaction.editReply({
-			content: `${address}で登録されました。\n承認されるまでお待ちください。\n承認後「/mint」コマンドでSBTの発行が行えるようになります。`,
-			ephemeral: true,
-		});
+		await postRegist(interaction, result);
 	}
 
 	if (interaction.commandName === "register") {
@@ -184,17 +181,7 @@ client.on("interactionCreate", async (interaction) => {
 			}
 			await interaction.deferReply({ ephemeral: true });
 			const result = await execRegist(interaction.user.id, interaction.member.nickname ?? interaction.user.username, address);
-			if (result) {
-				await interaction.editReply({
-					content: `${address}で登録されました。\n承認されるまでお待ちください。\n承認後「/mint」コマンドでSBTの発行が行えるようになります。`,
-					ephemeral: true,
-				})
-			} else {
-				await interaction.editReply({
-					content: "申請が込みあっています。しばらく待ってから再度申請してください。",
-					ephemeral: true,
-				})
-			}
+			await postRegist(interaction, result);
 		}
 	}
 
@@ -383,6 +370,26 @@ const execRegist = async (userid, username, address) => {
 	}
 	catch {
 		return false;
+	}
+};
+
+const postRegist = async (interaction, result) => {
+	if (result) {
+		try {
+			await interaction.editReply({
+				content: `${address}で登録されました。\n承認されるまでお待ちください。\n承認後「/mint」コマンドでSBTの発行が行えるようになります。`,
+				ephemeral: true,
+			});
+			const sbtAdminChannel = await client.channels.cache.get(settings.SBT_ADMIN_CHANNEL_ID);
+			await sbtAdminChannel.send(`${interaction.member.nickname ?? interaction.user.username}さんがSBTのregisterを行いました`);
+		} catch(error) {
+			console.error(error);
+		}
+	} else {
+		await interaction.editReply({
+			content: "申請が込みあっています。しばらく待ってから再度申請してください。",
+			ephemeral: true,
+		});
 	}
 };
 
