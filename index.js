@@ -160,7 +160,7 @@ client.on("interactionCreate", async (interaction) => {
 		}
 
 		const result = await execRegist(interaction.user.id, interaction.member.nickname ?? interaction.user.username, address);
-		await postRegist(interaction, result);
+		await postRegist(interaction, address, result);
 	}
 
 	if (interaction.commandName === "register") {
@@ -181,7 +181,7 @@ client.on("interactionCreate", async (interaction) => {
 			}
 			await interaction.deferReply({ ephemeral: true });
 			const result = await execRegist(interaction.user.id, interaction.member.nickname ?? interaction.user.username, address);
-			await postRegist(interaction, result);
+			await postRegist(interaction, address, result);
 		}
 	}
 
@@ -373,7 +373,7 @@ const execRegist = async (userid, username, address) => {
 	}
 };
 
-const postRegist = async (interaction, result) => {
+const postRegist = async (interaction, address, result) => {
 	if (result) {
 		try {
 			await interaction.editReply({
