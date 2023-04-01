@@ -381,7 +381,7 @@ const postRegist = async (interaction, address, result) => {
 				ephemeral: true,
 			});
 			const sbtAdminChannel = await client.channels.cache.get(settings.SBT_ADMIN_CHANNEL_ID);
-			await sbtAdminChannel.send(`${interaction.member.nickname ?? interaction.user.username}さんがSBTのregisterを行いました`);
+			await sbtAdminChannel.send(`${interaction.user.tag}さんがSBTのregisterを行いました`);
 		} catch(error) {
 			console.error(error);
 		}
