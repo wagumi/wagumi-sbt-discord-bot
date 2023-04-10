@@ -380,8 +380,8 @@ const postRegist = async (interaction, address, result) => {
 				content: `${address}で登録されました。\n承認されるまでお待ちください。\n承認後「/mint」コマンドでSBTの発行が行えるようになります。`,
 				ephemeral: true,
 			});
-			const sbtAdminChannel = await client.channels.cache.get(settings.SBT_ADMIN_CHANNEL_ID);
-			await sbtAdminChannel.send(`${interaction.user.tag}さんがSBTのregisterを行いました`);
+			const sbtAdminChannel = client.channels.cache.get(settings.SBT_ADMIN_CHANNEL_ID);
+			await sbtAdminChannel.send(`${interaction.user.tag}さん <@${interaction.user.id}> が和組SBTの「register」コマンドを実行しました。`);
 		} catch(error) {
 			console.error(error);
 		}
