@@ -146,7 +146,8 @@ const addMinterToNotion = async (userid) => {
 	const userpage = response.results[0].id;
 
 	//const pageId = '82462e9c-3a16-47cd-bd19-784671cbdf05';
-	const pageId = 'c822ee89-d3a8-464f-87bb-dee91a5d4053';
+	//const pageId = 'c822ee89-d3a8-464f-87bb-dee91a5d4053';
+	const pageId = '0f19d0b0de8a41948ed893e0b5ee73fb';
 	const propertyId = "%3DVLE"
 	response = await client.pages.properties.retrieve({ page_id: pageId, property_id: propertyId });
 
