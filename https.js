@@ -5,6 +5,9 @@ const { Client } = require('@notionhq/client');
 const settings = require("./settings.json");
 const sbtImage = require("./sbt-image/sbtImage.js");
 const fs = require("fs");
+const fetch = require('node-fetch');
+
+require('dotenv').config();
 
 const rest = new REST({ version: "10" }).setToken(process.env.DISCORD_TOKEN);
 
@@ -105,6 +108,31 @@ app.post('/minted/', async (req, res) => {
 	res.send("Received POST Data!");
 });
 
+app.get('/tokenId', async (req, res) => {
+	if (!req.query.address) {
+		return res.status(400).json({
+			error: "Specify an address for a requested token ID"
+		});
+	}
+
+	const address = req.query.address;
+	try {
+		const tokenId = await getTokenIdForAddress(address);
+		if (!tokenId) {
+			return res.status(404).json({
+				error: "Can't find the requested token ID"
+			});
+		}
+		res.json({
+			tokenId
+		});
+	} catch(error) {
+		res.status(400).json({
+			error
+		});
+	}
+});
+
 const addMinter = async (data) => {
 	try {
 		if (data.webhookId === "wh_bhpiswlt06zoazc3") {
@@ -187,6 +215,21 @@ const getMember = async (userid) => {
 		}
 		return { username: result.nick ?? result.user.username, avatar: icon };
 	} catch (e) {
+		return null;
+	}
+};
+
+const getTokenIdForAddress = async (address) => {
+	const url = new URL(`https://polygon-mainnet.g.alchemy.com/nft/v2/${process.env.ALCHEMY_API_KEY}/getNFTs`);
+	url.searchParams.set('owner', address);
+	url.searchParams.set('contractAddresses[]', [settings.SBT_CONTRACT_ADDRESS]);
+
+	const response = await fetch(url);
+	const json = await response.json();
+	if (json.totalCount === 1) {
+		const tokenIdInHex = json.ownedNfts[0].id.tokenId;
+		return parseInt(tokenIdInHex, 16).toString();
+	} else {
 		return null;
 	}
 };
