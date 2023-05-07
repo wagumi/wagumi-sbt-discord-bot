@@ -228,7 +228,7 @@ const getTokenIdForAddress = async (address) => {
 	const json = await response.json();
 	if (json.totalCount === 1) {
 		const tokenIdInHex = json.ownedNfts[0].id.tokenId;
-		return parseInt(tokenIdInHex, 16).toString();
+		return BigInt(tokenIdInHex).toString();
 	} else {
 		return null;
 	}
