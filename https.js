@@ -128,7 +128,7 @@ app.get('/tokenId', async (req, res) => {
 		});
 	} catch(error) {
 		res.status(400).json({
-			error
+			error: error.message
 		});
 	}
 });
@@ -225,6 +225,9 @@ const getTokenIdForAddress = async (address) => {
 	url.searchParams.set('contractAddresses[]', [settings.SBT_CONTRACT_ADDRESS]);
 
 	const response = await fetch(url);
+	if (!response.ok) {
+		throw new Error(await response.text());
+	}
 	const json = await response.json();
 	if (json.totalCount === 1) {
 		const tokenIdInHex = json.ownedNfts[0].id.tokenId;
