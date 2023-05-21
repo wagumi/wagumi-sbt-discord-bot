@@ -153,7 +153,7 @@ const addMinter = async (data) => {
 		}
 	}
 	catch (e) {
-		console.error("other message recieved");
+		console.error("other message recieved:", e);
 	}
 }
 
