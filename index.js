@@ -99,19 +99,20 @@ client.on("interactionCreate", async (interaction) => {
 		);
 
 		let i = 0;
-		role.members.forEach((user) => {
+		for (const [key, user] of role.members) {
 			try {
-				user.send(shares[i]);
-				i++
+				await user.send(shares[i]);
+				i++;
 			} catch {
-				interaction.editReply({
+				await interaction.editReply({
 					content: `シェアのDM送信中にエラーが発生しました。\nuser:${user.id}`,
 					ephemeral: true,
 				});
 				execDeleteApprove();
 				return;
 			}
-		});
+		}
+
 		await interaction.editReply({
 			content: `初期化されました\nshareOwners:${members}\nthreshold:${threshold}\nvalidator:${settings.VALIDATOR}`,
 			ephemeral: true,
