@@ -32,6 +32,18 @@ const commands = [
         ],
     },
     {
+        name: "test_dm",
+        description: "Send test DMs from the bot to members with a selected role",
+        options: [
+            {
+                name: "role",
+                description: "Select a role.",
+                type: 8,
+                required: true,
+            },
+        ],
+    },
+    {
         name: "approve",
         description: "send your share.",
         options: [
