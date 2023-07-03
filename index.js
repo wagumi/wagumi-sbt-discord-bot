@@ -246,6 +246,24 @@ client.on("interactionCreate", async (interaction) => {
 			ephemeral: true,
 		});
 	}
+
+	if (interaction.commandName === "test_dm") {
+		const guild = await client.guilds.fetch(interaction.guildId);
+		await guild.members.fetch();
+		const role = guild.roles.cache.get(interaction.options.getRole("role").id);
+		for (const [key, user] of role.members) {
+			try {
+				await user.send('ボットからのDM送信のテストです。とくにアクションは必要ありません。');
+			} catch {
+				await interaction.editReply({
+					content: `DM送信中にエラーが発生しました。\nuser: ${user.nickname ?? user.displayName}`,
+					ephemeral: true,
+				});
+				return;
+			}
+		}
+	}
+
 	if (interaction.customId === "firstOption") {
 		let lock;
 		try {
