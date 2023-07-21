@@ -2,8 +2,8 @@ const fs = require("fs");
 const fetch = require("node-fetch");
 const { Resvg } = require("@resvg/resvg-js");
 
-const createSBTImage = async (userid, username, icon, baseImage, borderImage, baseSvg, textColor) => {
-	const base = fs.readFileSync(baseSvg, "utf8");
+const createSBTImage = async (userid, username, icon, baseImage, borderImage, textColor) => {
+	const base = fs.readFileSync("./sbt-image/base.svg", "utf8");
 
 	let fontsize = "64";
 	username = username.substring(0, 24);
