@@ -72,37 +72,37 @@ app.get("/image", async (req, res, next) => {
 				case "Shichifuku":
 					baseImage = `${baseURI}/wagumi_sbt_base_shichifuku.png`;
 					borderImage = `${baseURI}/wagumi_sbt_border_omamori.png`;
-					baseSvg = `${baseURI}/base_omamori_1.svg`;
+					baseSvg = `./sbt-image/svg/base_omamori_1.svg`;
 					textColor = "#FF319D";
 					break;
 				case "Kokuryu":
 					baseImage = `${baseURI}/wagumi_sbt_base_kokuryu.png`;
 					borderImage = `${baseURI}/wagumi_sbt_border_omamori.png`;
-					baseSvg = `${baseURI}/base_omamori_2.svg`;
+					baseSvg = `./sbt-image/svg/base_omamori_2.svg`;
 					textColor = "#ffffff";
 					break;
 				case "Houou":
 					baseImage = `${baseURI}/wagumi_sbt_base_houou.png`;
 					borderImage = `${baseURI}/wagumi_sbt_border_omamori.png`;
-					baseSvg = `${baseURI}/base_omamori_2.svg`;
+					baseSvg = `./sbt-image/svg/base_omamori_2.svg`;
 					textColor = "#ffffff";
 					break;
 				case "YumeCawaii":
 					baseImage = `${baseURI}/wagumi_sbt_base_yumecawaii.png`;
 					borderImage = `${baseURI}/wagumi_sbt_border_yumecawaii.png`;
-					baseSvg = `${baseURI}/base.svg`;
+					baseSvg = `./sbt-image/svg/base.svg`;
 					textColor = "#ff6bdf";
 					break;
 				case "MakeMoney":
 					baseImage = `${baseURI}/wagumi_sbt_base_makemoney.png`;
 					borderImage = `${baseURI}/wagumi_sbt_border_makemoney.png`;
-					baseSvg = `${baseURI}/base.svg`;
+					baseSvg = `./sbt-image/svg/base.svg`;
 					textColor = "#ffffff";
 					break;
 				default:
 					baseImage = `${baseURI}/wagumi_sbt_base_dafault.png`;
 					borderImage = `${baseURI}/wagumi_sbt_border_default.png`;
-					baseSvg = `${baseURI}/base.svg`;
+					baseSvg = `./sbt-image/svg/base.svg`;
 					textColor = "#0B76D9";
 			}
 

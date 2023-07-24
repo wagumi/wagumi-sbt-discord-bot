@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="1500" viewBox="0 0 1500 1500">
-  <image href="$base-image$" width="1500" height="1500"/>
-  <image href="$icon$" x="330" y="844" width="200" height="200" transform="rotate(340,430,944)"/>
-  <image href="$border-image$" width="1500" height="1500"/>
-  
-  <text x="265" y="1275" font-size="$font-size$" stroke-width="1" stroke="#ffffff" fill="$text-color$" transform="rotate(340,150,700)">$username$</text>
-  <text x="265" y="1275" font-size="$font-size$" fill="$text-color$" transform="rotate(340,150,700)">$username$</text>
-</svg>
