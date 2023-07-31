@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="1500" viewBox="0 0 1500 1500">
+  <defs>
+    <clipPath id="clip-path">
+      <rect width="272" height="272" x="279" y="644"  rx="10" />
+    </clipPath>
+   </defs>
+  <image href="$base-image$" width="1500" height="1500"/>
+  <image href="$icon$" clip-path="url(#clip-path)" width="272" height="272" x="279" y="644" transform="rotate(342.8,430,944)"/>
+  <image href="$border-image$" x="0" y="0" width="1500" height="1500" transform="rotate(0,0,0)"/>
+  
+  <text x="318" y="1118" font-size="$font-size$" stroke-width="1" stroke="#ffffff" fill="$text-color$" transform="rotate(341,150,700)">$username$</text>
+  <text x="318" y="1118" font-size="$font-size$" fill="$text-color$" transform="rotate(341,150,700)">$username$</text>
+</svg>
