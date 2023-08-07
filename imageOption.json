@@ -21,6 +21,21 @@
               "label": "MakeMoney",  
               "value": "MakeMoney",
               "description": "世の中金だという方にお勧めです。"
+            },
+            {
+              "label": "Shichifuku",  
+              "value": "Shichifuku",
+              "description": "【七福神】所願成就、健康、商売繁盛、家内安全"
+            },
+            {
+              "label": "Houou",  
+              "value": "Houou",
+              "description": "【鳳凰】幸運、逆境を超える、天下泰平、恋愛成就、夫婦円満"
+            },
+            {
+              "label": "Kokuryu",  
+              "value": "Kokuryu",
+              "description": "【黒竜】厄除け、守護、人脈づくり、リーダーシップ、神通力"
             }
           ]
         }
