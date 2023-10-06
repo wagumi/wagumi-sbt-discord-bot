@@ -9,6 +9,31 @@ const fetch = require('node-fetch');
 
 require('dotenv').config();
 
+const {
+	Client : DiscordClient,
+	GatewayIntentBits,
+	ModalBuilder,
+	ActionRowBuilder,
+	TextInputBuilder,
+	TextInputStyle,
+	Partials,
+} = require("discord.js");
+
+const discordClient = new DiscordClient({
+	intents: [
+		GatewayIntentBits.Guilds,
+		GatewayIntentBits.GuildMembers,
+		GatewayIntentBits.GuildVoiceStates,
+		GatewayIntentBits.GuildMessages,
+		GatewayIntentBits.MessageContent,
+	],
+	partials: [Partials.Channel, Partials.Message, Partials.GuildMember],
+});
+
+discordClient.on("ready", () => {
+	console.log(`Logged in as ${discordClient.user.tag}!`);
+});
+
 const rest = new REST({ version: "10" }).setToken(process.env.DISCORD_TOKEN);
 
 const app = express();
@@ -156,9 +181,16 @@ app.get('/tokenId', async (req, res) => {
 });
 
 const addMinter = async (data) => {
+	let resMsg;
+	let mintedUserName;
+	const channelId = settings.SBT_ADMIN_CHANNEL_ID;
+	const mentionCode = "<@&" + settings.ADMIN_ROLE_ID + ">";
+
 	try {
 		if (data.webhookId === "wh_bhpiswlt06zoazc3") {
-			const address = data.event.activity[0].fromAddress.toLowerCase();
+			//test setting
+			//const address = data.event.activity[0].fromAddress.toLowerCase();
+			const address = "0x5a21e07c07faf6549ce8247ba7dd7b1257c0fc4d";
 			const filePath = "./requests.json";
 			let requests = {};
 			try {
@@ -167,18 +199,29 @@ const addMinter = async (data) => {
 			}
 			const userIds = Object.keys(requests);
 			const userid = userIds.find(id => requests[id].address.toLowerCase() === address);
+			mintedUserName = userIds.filter(id => requests[id].address.toLowerCase() === address).map(id => requests[id].username);
 			await addMinterToNotion(userid);
-  		await rest.put(
-				Routes.guildMemberRole(settings.GUILD_ID, userid,"1017617843916902411")
-			);
+  		//await rest.put(
+		//		Routes.guildMemberRole(settings.GUILD_ID, userid,"1017617843916902411")
+		//	);
 
+		resMsg = mentionCode + `\n` + mintedUserName + 'さんのMintが正常に行われました。';
 		}
 	}
 	catch (e) {
 		console.error("other message recieved:", e);
+		resMsg = mentionCode + `\n` + mintedUserName + `さんのMintでエラーが発生しました。\n${e}`;
+	}
+
+	const channel = discordClient.channels.cache.get(channelId);
+	
+	if (channel) {
+		// メッセージを送信します
+		channel.send(resMsg)
+	} else {
+		console.error(`Channel with ID ${channelId} not found.`);
 	}
 }
-
 
 const addMinterToNotion = async (userid) => {
 	const request = {
@@ -197,8 +240,11 @@ const addMinterToNotion = async (userid) => {
 
 	//const pageId = '82462e9c-3a16-47cd-bd19-784671cbdf05';
 	//const pageId = 'c822ee89-d3a8-464f-87bb-dee91a5d4053';
-	const pageId = '0f19d0b0de8a41948ed893e0b5ee73fb';
-	const propertyId = "%3DVLE"
+	//TEST setting
+	//const pageId = '0f19d0b0de8a41948ed893e0b5ee73fb';
+	//const propertyId = "%3DVLE"
+	const pageId = settings.SBT_PAGE_ID;
+	const propertyId = settings.SBT_PROPERTY_ID;
 	response = await client.pages.properties.retrieve({ page_id: pageId, property_id: propertyId });
 
 	const relations = response.results.map((item) => {
@@ -216,6 +262,26 @@ const addMinterToNotion = async (userid) => {
 		}
 	}
 	const result = await client.pages.update(target);
+
+	response = await client.pages.properties.retrieve({ page_id: pageId, property_id: propertyId });
+
+	const updateRelations = response.results.map((item) => {
+		return item.relation;
+	});
+
+	let hasUserpage = false;
+	for (const obj of updateRelations) {
+		console.log("obj.id=",obj.id);
+		if (obj.id === userpage) {
+		    hasUserpage = true;
+		    break;
+		}
+	  }
+
+	if (!hasUserpage) {
+		throw "Error registering with Notion";
+	};
+
 	return result.id;
 }
 
@@ -258,3 +324,9 @@ const getTokenIdForAddress = async (address) => {
 		return null;
 	}
 };
+
+(async () => {
+	console.log("login...");
+	discordClient.login(process.env.DISCORD_TOKEN);
+	//await test();
+})();
