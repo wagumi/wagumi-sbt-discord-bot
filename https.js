@@ -9,31 +9,6 @@ const fetch = require('node-fetch');
 
 require('dotenv').config();
 
-const {
-	Client : DiscordClient,
-	GatewayIntentBits,
-	ModalBuilder,
-	ActionRowBuilder,
-	TextInputBuilder,
-	TextInputStyle,
-	Partials,
-} = require("discord.js");
-
-const discordClient = new DiscordClient({
-	intents: [
-		GatewayIntentBits.Guilds,
-		GatewayIntentBits.GuildMembers,
-		GatewayIntentBits.GuildVoiceStates,
-		GatewayIntentBits.GuildMessages,
-		GatewayIntentBits.MessageContent,
-	],
-	partials: [Partials.Channel, Partials.Message, Partials.GuildMember],
-});
-
-discordClient.on("ready", () => {
-	console.log(`Logged in as ${discordClient.user.tag}!`);
-});
-
 const rest = new REST({ version: "10" }).setToken(process.env.DISCORD_TOKEN);
 
 const app = express();
@@ -213,14 +188,33 @@ const addMinter = async (data) => {
 		resMsg = mentionCode + `\n` + mintedUserName + `さんのMintでエラーが発生しました。\n${e}`;
 	}
 
-	const channel = discordClient.channels.cache.get(channelId);
-	
-	if (channel) {
-		// メッセージを送信します
-		channel.send(resMsg)
-	} else {
-		console.error(`Channel with ID ${channelId} not found.`);
+	const message = {"username":"SBT-ADMIN","content":resMsg};
+
+	function postData(url = ``, data = {}) {
+		return fetch(url, {
+		  method: "POST",
+		  mode: "cors",
+		  headers: {
+			'Content-type': 'application/json'
+		  },
+		  body: JSON.stringify(data),
+		});
+	  }
+	  
+	async function sendRequest() {
+		try {
+			const response = await postData(settings.SBT_ADMIN_CHANNEL_WEBHOOK, message);
+			
+			if (!response.ok) {
+			throw new Error(await response.text());
+			}
+		} catch (error) {
+			console.error(error);
+		}
 	}
+	
+	sendRequest();
+	  
 }
 
 const addMinterToNotion = async (userid) => {
@@ -271,7 +265,6 @@ const addMinterToNotion = async (userid) => {
 
 	let hasUserpage = false;
 	for (const obj of updateRelations) {
-		console.log("obj.id=",obj.id);
 		if (obj.id === userpage) {
 		    hasUserpage = true;
 		    break;
@@ -324,9 +317,3 @@ const getTokenIdForAddress = async (address) => {
 		return null;
 	}
 };
-
-(async () => {
-	console.log("login...");
-	discordClient.login(process.env.DISCORD_TOKEN);
-	//await test();
-})();
