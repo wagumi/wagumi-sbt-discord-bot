@@ -158,14 +158,11 @@ app.get('/tokenId', async (req, res) => {
 const addMinter = async (data) => {
 	let resMsg;
 	let mintedUserName;
-	const channelId = settings.SBT_ADMIN_CHANNEL_ID;
 	const mentionCode = "<@&" + settings.ADMIN_ROLE_ID + ">";
 
 	try {
 		if (data.webhookId === "wh_bhpiswlt06zoazc3") {
-			//test setting
-			//const address = data.event.activity[0].fromAddress.toLowerCase();
-			const address = "0x5a21e07c07faf6549ce8247ba7dd7b1257c0fc4d";
+			const address = data.event.activity[0].fromAddress.toLowerCase();
 			const filePath = "./requests.json";
 			let requests = {};
 			try {
@@ -176,9 +173,9 @@ const addMinter = async (data) => {
 			const userid = userIds.find(id => requests[id].address.toLowerCase() === address);
 			mintedUserName = userIds.filter(id => requests[id].address.toLowerCase() === address).map(id => requests[id].username);
 			await addMinterToNotion(userid);
-  		//await rest.put(
-		//		Routes.guildMemberRole(settings.GUILD_ID, userid,"1017617843916902411")
-		//	);
+  		await rest.put(
+				Routes.guildMemberRole(settings.GUILD_ID, userid,"1017617843916902411")
+			);
 
 		resMsg = mentionCode + `\n` + mintedUserName + 'さんのMintが正常に行われました。';
 		}
@@ -232,11 +229,6 @@ const addMinterToNotion = async (userid) => {
 	let response = await client.databases.query(request);
 	const userpage = response.results[0].id;
 
-	//const pageId = '82462e9c-3a16-47cd-bd19-784671cbdf05';
-	//const pageId = 'c822ee89-d3a8-464f-87bb-dee91a5d4053';
-	//TEST setting
-	//const pageId = '0f19d0b0de8a41948ed893e0b5ee73fb';
-	//const propertyId = "%3DVLE"
 	const pageId = settings.SBT_PAGE_ID;
 	const propertyId = settings.SBT_PROPERTY_ID;
 	response = await client.pages.properties.retrieve({ page_id: pageId, property_id: propertyId });
