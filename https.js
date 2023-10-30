@@ -156,6 +156,10 @@ app.get('/tokenId', async (req, res) => {
 });
 
 const addMinter = async (data) => {
+	let resMsg;
+	let mintedUserName;
+	const mentionCode = "<@&" + settings.ADMIN_ROLE_ID + ">";
+
 	try {
 		if (data.webhookId === "wh_bhpiswlt06zoazc3") {
 			const address = data.event.activity[0].fromAddress.toLowerCase();
@@ -167,18 +171,48 @@ const addMinter = async (data) => {
 			}
 			const userIds = Object.keys(requests);
 			const userid = userIds.find(id => requests[id].address.toLowerCase() === address);
+			mintedUserName = userIds.filter(id => requests[id].address.toLowerCase() === address).map(id => requests[id].username);
 			await addMinterToNotion(userid);
   		await rest.put(
 				Routes.guildMemberRole(settings.GUILD_ID, userid,"1017617843916902411")
 			);
 
+		resMsg = mentionCode + `\n` + mintedUserName + 'さんのMintが正常に行われました。';
 		}
 	}
 	catch (e) {
 		console.error("other message recieved:", e);
+		resMsg = mentionCode + `\n` + mintedUserName + `さんのMintでエラーが発生しました。\n${e}`;
 	}
-}
 
+	const message = {"username":"SBT-ADMIN","content":resMsg};
+
+	function postData(url = ``, data = {}) {
+		return fetch(url, {
+		  method: "POST",
+		  mode: "cors",
+		  headers: {
+			'Content-type': 'application/json'
+		  },
+		  body: JSON.stringify(data),
+		});
+	  }
+	  
+	async function sendRequest() {
+		try {
+			const response = await postData(settings.SBT_ADMIN_CHANNEL_WEBHOOK, message);
+			
+			if (!response.ok) {
+			throw new Error(await response.text());
+			}
+		} catch (error) {
+			console.error(error);
+		}
+	}
+	
+	sendRequest();
+	  
+}
 
 const addMinterToNotion = async (userid) => {
 	const request = {
@@ -195,10 +229,8 @@ const addMinterToNotion = async (userid) => {
 	let response = await client.databases.query(request);
 	const userpage = response.results[0].id;
 
-	//const pageId = '82462e9c-3a16-47cd-bd19-784671cbdf05';
-	//const pageId = 'c822ee89-d3a8-464f-87bb-dee91a5d4053';
-	const pageId = '0f19d0b0de8a41948ed893e0b5ee73fb';
-	const propertyId = "%3DVLE"
+	const pageId = settings.SBT_PAGE_ID;
+	const propertyId = settings.SBT_PROPERTY_ID;
 	response = await client.pages.properties.retrieve({ page_id: pageId, property_id: propertyId });
 
 	const relations = response.results.map((item) => {
@@ -216,6 +248,25 @@ const addMinterToNotion = async (userid) => {
 		}
 	}
 	const result = await client.pages.update(target);
+
+	response = await client.pages.properties.retrieve({ page_id: pageId, property_id: propertyId });
+
+	const updateRelations = response.results.map((item) => {
+		return item.relation;
+	});
+
+	let hasUserpage = false;
+	for (const obj of updateRelations) {
+		if (obj.id === userpage) {
+		    hasUserpage = true;
+		    break;
+		}
+	  }
+
+	if (!hasUserpage) {
+		throw "Error registering with Notion";
+	};
+
 	return result.id;
 }
 
