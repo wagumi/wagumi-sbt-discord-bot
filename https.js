@@ -182,7 +182,7 @@ const addMinter = async (data) => {
 	}
 	catch (e) {
 		console.error("other message recieved:", e);
-		resMsg = mentionCode + `\n` + mintedUserName + `さんのMintでエラーが発生しました。\n${e}`;
+		resMsg = mentionCode + `\n` + mintedUserName + `さんのMintでエラーが発生しました。\n${e.stack}`;
 	}
 
 	const message = {"username":"SBT-ADMIN","content":resMsg};
