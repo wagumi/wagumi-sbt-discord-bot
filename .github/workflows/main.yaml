@@ -24,8 +24,7 @@ jobs:
         with:
           switches: -avzr --delete --exclude-from="rsync-exclude-list.txt"
           path: ./
-          remote_path: /home/wagumi/apps/wagumi-sbt
-          remote_host: wagumi-prod-jpe-001.japaneast.cloudapp.azure.com
-          remote_user: wagumi
-          remote_port: 57822
-          remote_key: ${{ secrets.SSH_PRIVATE_KEY }}
+          remote_path: /home/ubuntu/apps/wagumi-sbt
+          remote_host: 54.92.49.172
+          remote_user: ubuntu
+          remote_key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
